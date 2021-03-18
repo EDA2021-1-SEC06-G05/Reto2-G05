@@ -31,8 +31,74 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Inicialización del Catálogo de libros
 
+def initCatalog(parametro):
+    """
+    Llama la funcion de inicializacion del catalogo del modelo.
+    """
+    catalog = model.newCatalog(parametro)
+    return catalog
+
 # Funciones para la carga de datos
+def crearSubLista(catalog, muestra):
+    nuevaLista = model.crearSubLista(catalog, muestra)
+    return nuevaLista
+
+def loadData(catalog):
+    """
+    Carga los datos de los archivos y cargar los datos en la
+    estructura de datos
+    """
+    loadVideos(catalog)
+    loadCategory(catalog)
+
+def loadVideos(catalog):
+
+    videosfile = cf.data_dir + 'videos-small.csv'
+    input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
+    for video in input_file:
+        model.addVideo(catalog, video)
+
+def loadCategory(catalog):
+
+    categoryfile = cf.data_dir + 'category-id.csv'
+    input_file = csv.DictReader(open(categoryfile, encoding='utf-8'))
+    for category in input_file:
+        model.addCategory(catalog, category) 
 
 # Funciones de ordenamiento
 
+def sortVideos(catalog):
+
+    model.sortVideos(catalog)
+
+def selectionVideos(catalog):
+    
+    model.selectionVideos(catalog)
+
+def insertionVideos(catalog):
+    
+    model.insertionVideos(catalog)   
+
+def shellVideos(catalog):
+    
+    model.shellVideos(catalog)       
+    
+def quickVideos(catalog):
+
+    model.quickVideos(catalog)
+
+def mergeVideos(catalog):
+
+    model.mergeVideos(catalog)        
 # Funciones de consulta sobre el catálogo
+
+def getVideosByCategory(catalog, categoria):
+
+    category = model.getVideosByCategory(catalog, categoria)
+    return category
+
+def getBestVideos(catalog, number):
+
+    bestvideos = model.getBestVideos(catalog, number)
+    return bestvideos
+
