@@ -48,11 +48,11 @@ def printMenu():
     print("2- Consultar el TOP n de tendencias por categoria y pais")
     print("0- Salir")
 
-def initCatalog(parametro):
+def initCatalog(parametro, tipoEstructuraMap, factorDeCarga):
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalog(parametro)
+    return controller.initCatalog(parametro, tipoEstructuraMap, factorDeCarga)
 
 def loadData(catalog):
     """
@@ -92,7 +92,7 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         MedirTiempo1 = time.process_time()
-        size = input('(1) para ARRAY_LIST o (2) para LINKED_LIST\n : ')
+        size = input('(1) para ARRAY_LIST, (2) para LINKED_LIST, (3) para CHAINING o (4) para PROBING\n : ')
         if int(size[0])==1:
             print("Cargando información de los archivos en ARRAY_LIST....")
             catalog = initCatalog("ARRAY_LIST")
@@ -109,6 +109,25 @@ while True:
             print('Categorias cargadas' + str(lt.size(catalog['category'])))
             print('views cargadas' + str(lt.size(catalog['views'])))
             MedirTiempo2 = time.process_time()
+
+
+        elif int(size[0])==3:
+            print("Cargando informacion de los archivos para CHAINING")
+            factorCarga = input("Digite factor de carga \n :")
+            catalog = initCatalog("ARRAY_LIST", "CHAINING", int(factorCarga))
+            loadData(catalog)
+            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ", "Memoria [kB]: ", f"{answer[2]:.3f}")
+
+
+        elif int(size[0])==4:   
+            print("Cargando informacion de los archivos para PROBING") 
+            factorCarga = input("Digite factor de carga \n :")
+            catalog = initCatalog("ARRAY_LIST", "PROBING", float(factorCarga))
+            loadData(catalog)
+            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ", "Memoria [kB]: ", f"{answer[2]:.3f}")
+
+
+
     elif int(inputs[0]) == 2:
         size = input('(1) para selection, (2) para insertion, (3) para shell, (4) para merge y (5) para quick\n : ')
         pre = input("Cantidad de la muestra : ")

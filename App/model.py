@@ -32,6 +32,8 @@ from DISClib.Algorithms.Sorting import selectionsort as sel
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import mergesort as merge
 from DISClib.Algorithms.Sorting import quicksort as quick
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 """
@@ -40,21 +42,21 @@ los mismos.
 """
 # Construccion de modelos
 
-def newCatalog(tipoEstructura):
+def newCatalog(tipoEstructura, tipoEstructuraMap, factorDeCarga):
 
-    catalog= {'videos': None, 'category': None, "views": None, "map": None, "cate": None}
-    catalog["map"] = map.newMap(numelements=17,
-           prime=109345121,
-           maptype='CHAINING',
-           loadfactor=0.5,
-           comparefunction=None)
+    catalog= {'videos': None, "views": None, "category": None}
+    #catalog["map"] = mp.newMap(numelements=17, maptype=tipoEstructuraMap, loadfactor= factorDeCarga, comparefunction=None)
     catalog['videos'] = lt.newList(datastructure=tipoEstructura)
-    catalog['category'] = lt.newList(datastructure=tipoEstructura)
+    #catalog['category'] = lt.newList(datastructure=tipoEstructura, cmpfunction= compareMapVideosCate)
     catalog["views"] = lt.newList(datastructure= tipoEstructura, cmpfunction= cmpVideosByViews)
-    catalog['cate'] = mp.newMap(33,
+
+    #catalog['category'] = mp.newMap(33, maptype= tipoEstructuraMap, loadfactor= factorDeCarga, comparefunction=compareMapVideosCate)
+    catalog['category'] = mp.newMap(10000,
                                    maptype='CHAINING',
                                    loadfactor=4.0,
                                    comparefunction=compareMapVideosCate)
+
+    catalog["videos"] = mp.newMap(1000, maptype = tipoEstructuraMap, loadfactor = factorDeCarga, comparefunction = compareMapVideosCate)                               
     return catalog
     
 # Funciones para agregar informacion al catalogo
@@ -68,7 +70,7 @@ def addCategory(catalog, categoria):
 
     categorias = catalog["category"] 
     lt.addLast(categorias, categoria) 
-    mp.put(catalog['cate'], categoria['id'], categoria)
+    mp.put(catalog['category'], categoria['id'], categoria)
 
 
 # Funciones para creacion de datos
