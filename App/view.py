@@ -41,11 +41,10 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Seleccionar el tipo de representación de la lista")
-    print("2- Seleccione el tipo de algoritmo de ordenamiento iterativo")
-    
+    print("2- Seleccione el tipo de algoritmo de ordenamiento iterativo")  
     print("3- Consultar el TOP n de tendencias por categoria y pais")
-    print("1- Seleccionar el tipo de representación de la lista")
-    print("2- Consultar el TOP n de tendencias por categoria y pais")
+    print("4- Seleccionar el tipo de representación de la lista")
+    print("5- Consultar el TOP n de tendencias por categoria y pais")
     print("0- Salir")
 
 def initCatalog(parametro, tipoEstructuraMap, factorDeCarga):
@@ -58,7 +57,7 @@ def loadData(catalog):
     """
     Carga los libros en la estructura de datos
     """
-    controller.loadData(catalog)
+    return controller.loadData(catalog)
 
 def printCategoryData(category):
     if category:
@@ -115,16 +114,17 @@ while True:
             print("Cargando informacion de los archivos para CHAINING")
             factorCarga = input("Digite factor de carga \n :")
             catalog = initCatalog("ARRAY_LIST", "CHAINING", int(factorCarga))
-            loadData(catalog)
-            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ", "Memoria [kB]: ", f"{answer[2]:.3f}")
+            answer = loadData(catalog)
+            print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
 
         elif int(size[0])==4:   
             print("Cargando informacion de los archivos para PROBING") 
             factorCarga = input("Digite factor de carga \n :")
             catalog = initCatalog("ARRAY_LIST", "PROBING", float(factorCarga))
-            loadData(catalog)
-            print("Tiempo [ms]: ", f"{answer[1]:.3f}", "  ||  ", "Memoria [kB]: ", f"{answer[2]:.3f}")
+            answer = loadData(catalog)
+            print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ", "Memoria [kB]: ", f"{answer[1]:.3f}")
 
 
 
@@ -185,15 +185,19 @@ while True:
             tiempo = instanteFinal - instanteInicial
             segundos = tiempo.seconds
             print("El tiempo en segundos es :")
-            print(segundos)      
+            print(segundos)     
+
+
     elif int(inputs[0]) == 3:
-        print("Cargando información de los archivos ....")
-        catalog = initCatalog()
-        loadData(catalog)
-        print('Videos cargados:' + str(lt.size(catalog['videos'])))
-        print('Canales cargados' + str(lt.size(catalog['channel'])))
-        print('Paises cargados' + str(lt.size(catalog['country'])))
-        print('Categorias cargadas' + str(lt.size(catalog['category'])))
+        A = input("nombre de la categoria")
+        B = input("Pais")
+        C = input("numero de videos")
+
+        lista = controller.requerimiento1(catalog, A, B, C)
+        print(lista)
+
+
+
     elif int(inputs[0]) == 4:
         number = input("Buscando los TOP ?:")
         videos = controller.getBestVideos(catalog, int(number))

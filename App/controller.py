@@ -78,9 +78,14 @@ def loadVideos(catalog):
 def loadCategory(catalog):
 
     categoryfile = cf.data_dir + 'category-id.csv'
-    input_file = csv.DictReader(open(categoryfile, encoding='utf-8'))
+    input_file = csv.DictReader(open(categoryfile, encoding='utf-8'), delimiter = "\t")
     for category in input_file:
         model.addCategory(catalog, category) 
+def requerimiento1(catalog, category_name, country, numeroVideos):
+    req1 = model.videosPaisCategoriaViews(catalog, category_name, country, numeroVideos)
+
+    return req1
+
 
 # Funciones de ordenamiento
 

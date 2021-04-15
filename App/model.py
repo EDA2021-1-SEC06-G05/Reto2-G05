@@ -44,33 +44,39 @@ los mismos.
 
 def newCatalog(tipoEstructura, tipoEstructuraMap, factorDeCarga):
 
-    catalog= {'videos': None, "views": None, "category": None}
+    catalog= {'videos': None, "views": None, "categorias": None}
     #catalog["map"] = mp.newMap(numelements=17, maptype=tipoEstructuraMap, loadfactor= factorDeCarga, comparefunction=None)
-    catalog['videos'] = lt.newList(datastructure=tipoEstructura)
+    #catalog['videos'] = lt.newList(datastructure=tipoEstructura)
     #catalog['category'] = lt.newList(datastructure=tipoEstructura, cmpfunction= compareMapVideosCate)
     catalog["views"] = lt.newList(datastructure= tipoEstructura, cmpfunction= cmpVideosByViews)
 
-    #catalog['category'] = mp.newMap(33, maptype= tipoEstructuraMap, loadfactor= factorDeCarga, comparefunction=compareMapVideosCate)
-    catalog['category'] = mp.newMap(10000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0,
-                                   comparefunction=compareMapVideosCate)
+    catalog["categorias"] = mp.newMap(100, maptype= tipoEstructuraMap, loadfactor= factorDeCarga, comparefunction=compareMapVideosCate)
 
-    catalog["videos"] = mp.newMap(1000, maptype = tipoEstructuraMap, loadfactor = factorDeCarga, comparefunction = compareMapVideosCate)                               
+    catalog["videos"] = mp.newMap(5000, maptype = tipoEstructuraMap, loadfactor = factorDeCarga, comparefunction = compareMapVideos)                               
     return catalog
     
 # Funciones para agregar informacion al catalogo
 
 def addVideo(catalog, video):
 
-    lt.addLast(catalog['videos'], video)
-    lt.addLast(catalog["views"],video)    
-
+    #lt.addLast(catalog['videos'], video)
+    #lt.addLast(catalog["views"],video)
+    contains = mp.contains(catalog["videos"], video["country"])
+    if(contains):
+        lista = mp.get(catalog["videos"], video["country"])
+        entry = me.getValue(lista)
+        lt.addLast(entry, video)
+    else:
+        videoLista = lt.newList("ARRAY_LIST")
+        lt.addLast(videoLista, video)
+        mp.put(catalog["videos"], video["country"], videoLista)
+      
+    
 def addCategory(catalog, categoria):
+    #categorias = catalog["categorias"] 
+    # lt.addLast(categorias, categoria) 
 
-    categorias = catalog["category"] 
-    lt.addLast(categorias, categoria) 
-    mp.put(catalog['category'], categoria['id'], categoria)
+    mp.put(catalog["categorias"], categoria["name"], categoria["id"])
 
 
 # Funciones para creacion de datos
@@ -88,9 +94,21 @@ def crearSubLista(catalog, muestra):
 
     return nuevaLista
 
+def videosPaisCategoriaViews(catalog, category_name, country, numeroVideos):
+    nuevaLista = lt.newList("ARRAY_LIST")
+    entry = mp.get(catalog["videos"], country)
+    lista = me.getValue(entry)
+    for video in lista:
+        categoria = video["category_id"]
+        categoriaId = mp.get(catalog["categorias"], category_name)
+        Id = me.getValue(categoriaId)
+        if(categoria == Id):
+            lt.addLast(nuevaLista, video)
 
+    shell.sort(nuevaLista, compareviews)
+    listaFinal = lt.subList(nuevaLista, 1, numeroVideos)
 
-
+    return listaFinal
 
 
 
@@ -181,9 +199,18 @@ def mergeVideos(catalog):
 def compareMapVideosCate(id, entry):
   
     identry = me.getKey(entry)
-    if (int(id) == int(identry)):
+    if ((id) == (identry)):
         return 0
-    elif (int(id) > int(identry)):
+    elif ((id) > (identry)):
+        return 1
+    else:
+        return -1
+
+def compareMapVideos(nombre, entry):
+    identry = me.getKey(entry)
+    if (nombre == identry):
+        return 0
+    elif (nombre > identry):
         return 1
     else:
         return -1
