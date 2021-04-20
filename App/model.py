@@ -34,6 +34,8 @@ from DISClib.Algorithms.Sorting import mergesort as merge
 from DISClib.Algorithms.Sorting import quicksort as quick
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.DataStructures import arraylistiterator as it
+from DISClib.DataStructures import linkedlistiterator as link
 assert cf
 
 """
@@ -76,7 +78,7 @@ def addCategory(catalog, categoria):
     #categorias = catalog["categorias"] 
     # lt.addLast(categorias, categoria) 
 
-    mp.put(catalog["categorias"], categoria["name"], categoria["id"])
+    mp.put(catalog["categorias"], categoria["id"], categoria["name"])
 
 
 # Funciones para creacion de datos
@@ -95,18 +97,23 @@ def crearSubLista(catalog, muestra):
     return nuevaLista
 
 def videosPaisCategoriaViews(catalog, category_name, country, numeroVideos):
+    category_name = " " + category_name
     nuevaLista = lt.newList("ARRAY_LIST")
     entry = mp.get(catalog["videos"], country)
     lista = me.getValue(entry)
-    for video in lista:
-        categoria = video["category_id"]
-        categoriaId = mp.get(catalog["categorias"], category_name)
-        Id = me.getValue(categoriaId)
-        if(categoria == Id):
-            lt.addLast(nuevaLista, video)
-
+    categorias = mp.keySet(catalog["categorias"])
+    for i in range (1, lt.size(categorias)+1):
+        categoriaActual = lt.getElement(categorias, i)
+        cate = mp.get(catalog["categorias"], categoriaActual)
+        valor = me.getValue(cate)
+        if(valor == category_name ):
+            for i in range(1, lt.size(lista)+1):
+                video = lt.getElement(lista, i)
+                categoria = video["category_id"]
+                if(categoria == categoriaActual):
+                    lt.addLast(nuevaLista, video)
     shell.sort(nuevaLista, compareviews)
-    listaFinal = lt.subList(nuevaLista, 1, numeroVideos)
+    listaFinal = lt.subList(nuevaLista, 1, int (numeroVideos))
 
     return listaFinal
 

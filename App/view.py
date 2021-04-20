@@ -189,13 +189,21 @@ while True:
 
 
     elif int(inputs[0]) == 3:
-        A = input("nombre de la categoria")
-        B = input("Pais")
-        C = input("numero de videos")
+        A = input("nombre de la categoria\n : ")
+        B = input("Pais\n : ")
+        C = input("numero de videos\n : ")
 
         lista = controller.requerimiento1(catalog, A, B, C)
-        print(lista)
-
+        for i in range (1, lt.size(lista)+1):
+            elemento = lt.getElement(lista, i)
+            print(elemento["trending_date"])
+            print(elemento["title"])
+            print(elemento["channel_title"])
+            print(elemento["publish_time"])
+            print(elemento["views"])
+            print(elemento["likes"])
+            print(elemento["dislikes"])
+            
 
 
     elif int(inputs[0]) == 4:
